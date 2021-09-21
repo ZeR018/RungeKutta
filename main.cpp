@@ -1,5 +1,8 @@
 #include <iostream>
 #include <math.h>
+#include <fstream>
+using namespace std;
+#define FILE_NAME "D:\\1Study\\C++\\RungeKutta\\RK4results.txt"
 
 // m, a1, a3 > 0
 double m;
@@ -36,9 +39,15 @@ double* rungeCuttaMethod (double (*func)(double), double h, double x0,  double m
     return res;
 };
 
+void clean(const char *fName) {
+ofstream fout;
+fout.open(fName, ios::trunc);
+fout.close();
+}
+
 int main() {
-    a1 = 1;
-    a3 = 1;
+    a1 = 2;
+    a3 = 5;
     m = 1;
 
     double h = 0.01; // Шаг h
@@ -49,8 +58,17 @@ int main() {
 
 
     for(int i = 0; i < maxX/h; i++) {
-        std::cout << i;
-        std::cout << " ";
-        std::cout << RKres[i]<< std::endl;
+        cout << i;
+        cout << " ";
+        cout << RKres[i]<< endl;
     }
+
+    clean(FILE_NAME);
+    ofstream fout;
+    fout.open(FILE_NAME, ios::app);
+    fout << "res" << endl;
+    for(int i = 0; i < maxX/h; i++) {
+        fout << i << ": " << RKres[i] << endl;
+    }
+
 };
