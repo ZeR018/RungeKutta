@@ -11,33 +11,43 @@ double a1, a3;
 // 9 задача вариант 4
 // m du/dx = R
 // R = -(a1*u + a3*u^3)
-double func (double u) {
+double func9 (double u) {
     return -(a1 * u + a3 * u * u * u) / m;
 }
 
-double* rungeCuttaMethod (double (*func)(double), double h, double x0,  double maxX) {
+double* rungeCuttaMethod (double (*func)(double), double h, double u0,  double maxX) {
     double k1, k2, k3, k4;
 
     int n = maxX/h;
     double *res = new double [n];
-    double x = x0;
+    double u = u0;
     int i = 1;
-    res[0] = x0;
+    res[0] = u0;
 
-    for(double t = 0; t < maxX-h; t+=h) {
+    for(double x = 0; x < maxX-h; x+=h) {
 
-        k1 = func(x);
-        k2 = func(x + k1 * h / 2.0);
-        k3 = func(x + k2 * h/ 2.0);
-        k4 = func(x + k3 * h/ 2.0);
+        k1 = func(u);
+        k2 = func(u + k1 * h / 2.0);
+        k3 = func(u + k2 * h/ 2.0);
+        k4 = func(u + k3 * h/ 2.0);
 
-        x+=(h/6.0)*(k1+2*k2+2*k3+k4);
-        res[i] = x;
+        u+=(h/6.0)*(k1+2*k2+2*k3+k4);
+        res[i] = u;
         i++;
     }
 
     return res;
 };
+
+double* exactSol9 (double h, double u0,  double maxX) {
+    int n = maxX/h;
+    double *res = new double [n];
+    int i = 1;
+    res[0] = u0;
+    double c = (a1 / (u0 * u0)) + a3;
+
+    return res;
+}
 
 void clean(const char *fName) {
 ofstream fout;
@@ -51,24 +61,27 @@ int main() {
     m = 1;
 
     double h = 0.01; // Шаг h
-    double x0 = 1;
+    double u0 = 1;
     double maxX = 5;
     double * RKres = new double [maxX/h];
-    RKres = rungeCuttaMethod(func, h, x0, maxX);
+    RKres = rungeCuttaMethod(func9, h, u0, maxX);
+    double * exactRes = new double [maxX/h];
+    exactRes = exactSol9(h, u0, maxX);
 
 
-    for(int i = 0; i < maxX/h; i++) {
-        cout << i;
-        cout << " ";
-        cout << RKres[i]<< endl;
-    }
+//    for(int i = 0; i < maxX/h; i++) {
+//        cout << i;
+//        cout << " ";
+//        cout << RKres[i]<< endl;
+//    }
 
     clean(FILE_NAME);
     ofstream fout;
     fout.open(FILE_NAME, ios::app);
-    fout << "res" << endl;
+    fout << "a1:" << a1 << ", a3:" << a3 << ", m: " << m << ", u0: " << u0 << endl << endl;
+    fout << "i" << ": " << "RK, " << "Exact, " << "inaccuracy" << endl;
     for(int i = 0; i < maxX/h; i++) {
-        fout << i << ": " << RKres[i] << endl;
+        fout << i << ": " << RKres[i] << ", " << exactRes[i] << ", " << (exactRes[i] - RKres[i]) << endl;
     }
 
 };
