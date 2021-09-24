@@ -1,10 +1,10 @@
-﻿  stdafx.cpp
-  dllmain.cpp
-  dll_for_py.cpp
-dll_for_py.cpp(141): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+﻿  dll_for_py.cpp
+dll_for_py.cpp(203): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
      Creating library C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.lib and object C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.exp
   Generating code
-  All 212 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  39 of 214 functions (18.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    7 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   dll_for_py.vcxproj -> C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll
   dll_for_py.vcxproj -> C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.pdb (Full PDB)

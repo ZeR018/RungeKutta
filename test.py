@@ -20,36 +20,10 @@ par_m[1] = 1000.0
 
 dll.work_RK31R(byref(d),byref(par_d),byref(par_m),byref(par_i))
 
-for j in range(par_i.value):
-    print(d[j],"\t")
-    if(j%3==0):
+j = 1
+for j  in range(par_i.value):
+    if((j-1)%4==0):
         print("\n")
+    print(d[j-1],"\t")
 
 
-#dll.fin_vect.argtypes = [POINTER(POINTER(c_double))]
-#dll.fin_vect.restype = None
-#d = POINTER(c_double)()
-#d_i = 4
-#i_i = 2
-#par_d = (c_double*d_i)()
-#par_i = (c_int*i_i)()
-#for z in range(d_i):
-#    par_d[z] = z+1.4
-#for z in range(i_i):
-#    par_i[z] = z+10
-#
-#dll.fin_vect(byref(d),par_i,par_d)
-#print(d[0],d[1],d[2])
-
-
-#dll.test_vect.argtypes= [POINTER(c_double)]
-#dll.test_vect.restype = None
-#i = 3
-#data = (c_double*i)()
-#dll.test_vect(data)
-#print(data[0],data[1],data[2])
-
-#dll.new_mem.argtypes = [POINTER(POINTER(c_int))]
-#mem = POINTER(c_int)()
-#dll.new_mem(byref(mem))
-#print(mem[0][0])
