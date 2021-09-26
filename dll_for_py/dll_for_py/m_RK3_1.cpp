@@ -7,19 +7,19 @@
 //																что равносильно perem[1]						
 enum { __x, __v1, __e, __h1, __h2, __h3 };
 
-#define NOT_MORE 0.5
-#define NOT_SMOL 0.1
+#define EPS 0.01
+#define P_PLUS_ODIN 4 
 
 // j здесь для сдвига массива по __h, опять же для памяти и быстродействия
 double st_RK_1(double* perem, double *k, int j)
 {
 	//_h = h / 2;
-	perem[__h2 + j] = perem[__h1 + j];
+	perem[__h2 + j] = perem[__h1 + j]/2;
 	//k[0] = f(x[0], v1[0]);
 	k[0] = f(perem[__x], perem[__v1]);
-	//k[1] = f(h[0] / 2 + x[0], _h[0] *k[0] + v1[0]);
+	//k[1] = f(h / 2 + x[0], _h[0] *k[0] + v1);
 	k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + perem[__v1]);
-	//k[2] = f(x[0] + h[0], (-k[0] + 2 * k[1])*h[0] + v1[0]);
+	//k[2] = f(x + h, (-k + 2 * k)*h + v1);
 	k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + perem[__v1]);
 
 	//return (k[0] + 4 * k[1] + k[2]) / 6 *(*h) + (*v1);
@@ -33,11 +33,11 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 	double v2 = 0.0;
 	//------------------x---v1---e---h
 	double perem[6] = {};
-	double rec[MAX_ARR * 5] = {};
 	double k[3] = {};
 	int z = 0;
 	double tmp = 0.0;
 	vector<double> d_v;
+	double C[2] = {};
 
 	string name = string(name_txt);
 	ofstream _f(name);
@@ -63,28 +63,28 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 		v_temp = st_RK_1(perem, k, 0);
 		v2 = st_RK_1(perem, k, 1);
 
+		perem[__e] = abs(perem[__v1] - v2);
+
 		//условие, если рез функции зашел за наши параметры
-		if (v_temp - perem[__v1] > NOT_MORE || perem[__v1] - v_temp > NOT_MORE)
+		if (perem[__e] > EPS*pow(2, P_PLUS_ODIN))
 		{
 			i--;
 			perem[__h1] = perem[__h1] / 2;
+			C[1] += 1;
 			continue;
 		}
 
-		if (v_temp - perem[__v1] < NOT_SMOL && perem[__v1] - v_temp < NOT_SMOL)
+		if (perem[__e] < EPS)
 		{
 			perem[__h1] = perem[__h1] * 2;
+			C[0] += 1;
+
 		}
+
 		//----------------------------------------------------------------------
 
 		//пихаем значения и погрешность
 		perem[__v1] = v_temp;
-		tmp = perem[__v1] - v2;
-		if (tmp < 0)
-			perem[__e] = tmp*(-1);
-		else
-			perem[__e] = tmp;
-		//perem[__e] = abs(perem[__v1] - v2);
 
 		//кидаем в вектор то что нужно
 		d_v.push_back(perem[__x]);
@@ -101,6 +101,7 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 	*py = new double[d_v.size()];
 	std::memcpy(*py, d_v.data(), d_v.size() * sizeof d_v[0]);
 	int size = d_v.size();
+
 	//запись в файл
 	record(&_f, *py, size);
 	

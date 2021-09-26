@@ -1,9 +1,10 @@
-﻿  dll_for_py.cpp
+﻿  m_RK3_1.cpp
+m_RK3_1.cpp(103): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
      Creating library C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.lib and object C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.exp
   Generating code
-  3 of 213 functions ( 1.4%) were compiled, the rest were copied from previous compilation.
+  2 of 216 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   dll_for_py.vcxproj -> C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll
   dll_for_py.vcxproj -> C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.pdb (Full PDB)

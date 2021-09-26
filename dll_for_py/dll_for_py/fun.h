@@ -1,6 +1,6 @@
 #pragma once
 #include<fstream>
-
+#include<math.h>
 
 #define MAX_ARR 100
 #define KRAT 5
@@ -11,6 +11,7 @@ double f(double x, double v)
 {
 	return x + 3 * v + 5 * v;
 }
+
 
 void record(ostream* f, double * d, int max)
 {
