@@ -1,5 +1,5 @@
 ﻿  m_RK3_1.cpp
-m_RK3_1.cpp(103): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+m_RK3_1.cpp(114): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
      Creating library C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.lib and object C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.exp
   Generating code
   2 of 216 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
