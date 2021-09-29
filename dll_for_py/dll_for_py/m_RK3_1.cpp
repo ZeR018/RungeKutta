@@ -5,10 +5,10 @@
 //данные предоставляют сплошной массив, поэтому для удобства я сделал набор типо понятных символов
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
-enum { __x, __v1, __e, __h1, __h2, __h3 };
+enum { __x, __v1, __s, __h1, __h2, __h3 };
 
 #define EPS 0.01
-#define P_PLUS_ODIN 4 
+#define P 4 
 
 // j здесь для сдвига массива по __h, опять же для памяти и быстродействия
 double st_RK_1(double* perem, double *k, int j)
@@ -57,7 +57,7 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 	//инициализация массива
 	perem[__x] = x;
 	perem[__v1] = v1;
-	perem[__e] = 0.0;
+	perem[__s] = 0.0;
 	perem[__h1] = h;
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
@@ -65,19 +65,19 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 	//добавление в вектор 1-х значений
 	d_v.push_back(perem[__x]);
 	d_v.push_back(perem[__v1]);
-	d_v.push_back(perem[__e]);
+	d_v.push_back(perem[__s]);
 	d_v.push_back(perem[__h1]);
 
-	for (int i = 0; perem[__x]<max_x && perem[__v1]<max_v; i++)
+	for (int i = 0; perem[__x] < max_x && perem[__v1] < max_v; i++)
 	{
 		//вычисление 
 		v_temp = st_RK_1(perem, k, 0);
 		v2 = st_RK_1(perem, k, 1);
 
-		perem[__e] = abs(perem[__v1] - v2);
+		perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
 
 		//условие, если рез функции зашел за наши параметры
-		if (perem[__e] > EPS*pow(2, P_PLUS_ODIN))
+		if (perem[__s] > EPS)
 		{
 			i--;
 			perem[__h1] = perem[__h1] / 2;
@@ -85,7 +85,7 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 			continue;
 		}
 
-		if (perem[__e] < EPS)
+		if (perem[__s] < EPS / pow(2, P + 1))
 		{
 			perem[__h1] = perem[__h1] * 2;
 			C[0] += 1;
@@ -100,7 +100,7 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 		//кидаем в вектор то что нужно
 		d_v.push_back(perem[__x]);
 		d_v.push_back(perem[__v1]);
-		d_v.push_back(perem[__e]);
+		d_v.push_back(perem[__s]);
 		d_v.push_back(perem[__h1]);
 
 
