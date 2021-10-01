@@ -4,12 +4,15 @@
 
 #define MAX_ARR 100
 #define KRAT 5
+#define m 1
+#define a1 1
+#define a3 1
 
 using namespace std;
 
 double f(double x, double v)
 {
-	return x + 3 * v + 5 * v;
+	return - (a1 * v, + a3 * pow(v, 3)) / m;
 }
 
 

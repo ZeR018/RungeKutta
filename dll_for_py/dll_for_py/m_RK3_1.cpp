@@ -37,6 +37,13 @@ double st_RK_1(double* perem, double *k, int j)
 	return (k[0] + 4 * k[1] + k[2]) / 6 * perem[__h1 + j] + perem[__v1];
 }
 
+// »стинное решение задачи 9 в точке perem[__x] при начальных услови€х u(x0)=u0
+// Ќа данный момент не используетс€
+double st_true_sol_ex_9(double *perem, double u0, double x0) 
+{
+	return sqrt(a1) / sqrt( (a3 + a1 / pow(u0, 2) * exp(2*a1*m*(perem[__x]-x0)) )-a3);
+}
+
 
 int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* name_txt, double** py)
 {
