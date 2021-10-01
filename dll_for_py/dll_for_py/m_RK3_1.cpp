@@ -47,7 +47,7 @@ double st_true_sol_ex_9(double *perem, double* start_p)
 }
 
 
-int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* name_txt, double** py)
+int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* name_txt, double** py, int stat_h)
 {
 	double v_temp = 0.0;
 	double v2 = 0.0;
@@ -93,20 +93,23 @@ int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* n
 
 		perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
 
-		//условие, если рез функции зашел за наши параметры
-		if (perem[__s] > EPS)
+		if (stat_h) //c изминением шага или без
 		{
-			i--;
-			perem[__h1] = perem[__h1] / 2;
-			perem[__c1] += 1.0;
-			continue;
-		}
+			//условие, если рез функции зашел за наши параметры
+			if (perem[__s] > EPS)
+			{
+				i--;
+				perem[__h1] = perem[__h1] / 2;
+				perem[__c1] += 1.0;
+				continue;
+			}
 
-		if (perem[__s] < EPS / pow(2, P + 1))
-		{
-			perem[__h1] = perem[__h1] * 2;
-			perem[__c2] += 1.0;
+			if (perem[__s] < EPS / pow(2, P + 1))
+			{
+				perem[__h1] = perem[__h1] * 2;
+				perem[__c2] += 1.0;
 
+			}
 		}
 
 		perem[__u] = st_true_sol_ex_9(perem, start_p);
