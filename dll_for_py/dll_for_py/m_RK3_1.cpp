@@ -98,7 +98,7 @@ int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* n
 			//условие, если рез функции зашел за наши параметры
 			if (perem[__s] > EPS)
 			{
-				i--;
+				//i--;
 				perem[__h1] = perem[__h1] / 2;
 				perem[__c1] += 1.0;
 				continue;
