@@ -5,10 +5,11 @@
 //данные предоставляют сплошной массив, поэтому для удобства я сделал набор типо понятных символов
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
-enum { __x, __v1, __s, __h1, __h2, __h3 };
+enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E };
 
 #define EPS 0.01
-#define P 4 
+#define P 3
+#define P_SIZE 8
 
 // j здесь для сдвига массива по __h, опять же для памяти и быстродействия
 double st_RK_1(double* perem, double *k, int j)
@@ -39,7 +40,7 @@ double st_RK_1(double* perem, double *k, int j)
 
 // Истинное решение задачи 9 в точке perem[__x] при начальных условиях u(x0)=u0
 // На данный момент не используется
-double st_true_sol_ex_9(double *perem, double u0, double x0) 
+double st_true_sol_ex_9(double *perem, double x0, double u0)
 {
 	return sqrt(a1) / sqrt( (a3 + a1 / pow(u0, 2) * exp(2*a1*m*(perem[__x]-x0)) )-a3);
 }
@@ -50,7 +51,7 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 	double v_temp = 0.0;
 	double v2 = 0.0;
 	//------------------x---v1---e---h
-	double perem[6] = {};
+	double perem[P_SIZE] = {};
 	double k[3] = {};
 	int z = 0;
 	double tmp = 0.0;
@@ -68,6 +69,8 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 	perem[__h1] = h;
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
+	perem[__u] = v1;
+	perem[__E] = 0.0;
 
 	//добавление в вектор 1-х значений
 	d_v.push_back(perem[__x]);
@@ -99,6 +102,9 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 
 		}
 
+		perem[__u] = st_true_sol_ex_9(perem, x, v1);
+		perem[__E] = fabs(perem[__u] - perem[__v1]);
+
 		//----------------------------------------------------------------------
 
 		//пихаем значения и погрешность
@@ -109,6 +115,9 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 		d_v.push_back(perem[__v1]);
 		d_v.push_back(perem[__s]);
 		d_v.push_back(perem[__h1]);
+		d_v.push_back(perem[__u]);
+		d_v.push_back(perem[__E]);
+
 
 
 		//увеличиваем x
