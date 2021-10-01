@@ -5,33 +5,34 @@
 //данные предоставляют сплошной массив, поэтому для удобства я сделал набор типо понятных символов
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
-enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E };
+enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E,__c1,__c2 };
+enum {__x0,__v0,__h0,__a1,__a3,__m};
 
 #define EPS 0.01
 #define P 3
-#define P_SIZE 8
+#define P_SIZE 10
 
 // j здесь для сдвига массива по __h, опять же для памяти и быстродействия
-double st_RK_1(double* perem, double *k, int j)
+double st_RK_1(double* perem,double* start_p, double *k, int j)
 {
 	//_h = h / 2;
 	perem[__h2 + j] = perem[__h1 + j]/2;
 	//k[0] = f(x[0], v1[0]);
-	k[0] = f(perem[__x], perem[__v1]);
+	k[0] = f(perem[__x], perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
 	//k[1] = f(h / 2 + x[0], _h[0] *k[0] + v1);
-	k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + perem[__v1]);
+	k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
 	//k[2] = f(x + h, (-k + 2 * k)*h + v1);
-	k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + perem[__v1]);
+	k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
 	
 	if (j)
 	{
 		double tmp = (k[0] + 4 * k[1] + k[2]) / 6 * perem[__h1 + j] + perem[__v1];
 
-		k[0] = f(perem[__x], perem[__v1]);
+		k[0] = f(perem[__x], perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
 		//k[1] = f(h / 2 + x[0], _h[0] *k[0] + v1);
-		k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + perem[__v1]);
+		k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
 		//k[2] = f(x + h, (-k + 2 * k)*h + v1);
-		k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + perem[__v1]);
+		k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
 	}
 
 	//return (k[0] + 4 * k[1] + k[2]) / 6 *(*h) + (*v1);
@@ -40,13 +41,13 @@ double st_RK_1(double* perem, double *k, int j)
 
 // Истинное решение задачи 9 в точке perem[__x] при начальных условиях u(x0)=u0
 // На данный момент не используется
-double st_true_sol_ex_9(double *perem, double x0, double u0)
+double st_true_sol_ex_9(double *perem, double* start_p)
 {
-	return sqrt(a1) / sqrt( (a3 + a1 / pow(u0, 2) * exp(2*a1*m*(perem[__x]-x0)) )-a3);
+	return sqrt(start_p[__a1]) / sqrt(( (start_p[__a3] + start_p[__a1] / pow(start_p[__u], 2)) * exp(2* start_p[__a1]* start_p[__m]*(perem[__x]- start_p[__x0]) ))- start_p[__a3]);
 }
 
 
-int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* name_txt, double** py)
+int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* name_txt, double** py)
 {
 	double v_temp = 0.0;
 	double v2 = 0.0;
@@ -63,26 +64,32 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 
 
 	//инициализация массива
-	perem[__x] = x;
-	perem[__v1] = v1;
+	perem[__x] = start_p[__x0];
+	perem[__v1] = start_p[__v0];
 	perem[__s] = 0.0;
-	perem[__h1] = h;
+	perem[__h1] = start_p[__h0];
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
-	perem[__u] = v1;
+	perem[__u] = start_p[__v0];
 	perem[__E] = 0.0;
+	perem[__c1] = 0.0;
+	perem[__c2] = 0.0;
 
 	//добавление в вектор 1-х значений
 	d_v.push_back(perem[__x]);
 	d_v.push_back(perem[__v1]);
 	d_v.push_back(perem[__s]);
 	d_v.push_back(perem[__h1]);
+	d_v.push_back(perem[__u]);
+	d_v.push_back(perem[__E]);
+	d_v.push_back(perem[__c1]);
+	d_v.push_back(perem[__c2]);
 
-	for (int i = 0; perem[__x] < max_x && perem[__v1] < max_v; i++)
+	for (int i = 0; perem[__x] < max_x && (perem[__v1] < max_v && perem[__v1]>min_v); i++)
 	{
 		//вычисление 
-		v_temp = st_RK_1(perem, k, 0);
-		v2 = st_RK_1(perem, k, 1);
+		v_temp = st_RK_1(perem,start_p, k, 0);
+		v2 = st_RK_1(perem,start_p, k, 1);
 
 		perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
 
@@ -91,18 +98,18 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 		{
 			i--;
 			perem[__h1] = perem[__h1] / 2;
-			C[1] += 1;
+			perem[__c1] += 1.0;
 			continue;
 		}
 
 		if (perem[__s] < EPS / pow(2, P + 1))
 		{
 			perem[__h1] = perem[__h1] * 2;
-			C[0] += 1;
+			perem[__c2] += 1.0;
 
 		}
 
-		perem[__u] = st_true_sol_ex_9(perem, x, v1);
+		perem[__u] = st_true_sol_ex_9(perem, start_p);
 		perem[__E] = fabs(perem[__u] - perem[__v1]);
 
 		//----------------------------------------------------------------------
@@ -117,6 +124,8 @@ int m_RK3_1_r(double x, double v1, double h, double max_x, double max_v, char* n
 		d_v.push_back(perem[__h1]);
 		d_v.push_back(perem[__u]);
 		d_v.push_back(perem[__E]);
+		d_v.push_back(perem[__c1]);
+		d_v.push_back(perem[__c2]);
 
 
 

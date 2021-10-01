@@ -14,10 +14,10 @@
 using namespace std;
 
 
-extern "C" __declspec(dllexport) void __stdcall work_RK31R(double** data, double * d, double * max, int* _i)
+extern "C" __declspec(dllexport) void __stdcall work_RK31R(double** data, double * d, double * gran, int* _i)
 {
 
-	*_i = m_RK3_1_r(d[0], d[1], d[2], max[0], max[1], "test2.txt", data);
+	*_i = m_RK3_1_r(d, gran[0], gran[1], gran[2], "test2.txt", data);
 
 }
 
