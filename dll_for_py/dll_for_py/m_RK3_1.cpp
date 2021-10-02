@@ -6,7 +6,8 @@
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
 enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E,__c1,__c2 };
-enum {__x0,__v0,__h0,__a1,__a3,__m};
+enum {__x0,__v0,__h0,__a1,__a3,__m,__e,__max_step, __gran};
+enum {_x_u, __contr_e};
 
 #define EPS 0.01
 #define P 3
@@ -47,7 +48,7 @@ double st_true_sol_ex_9(double *perem, double* start_p)
 }
 
 
-int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* name_txt, double** py, int stat_h)
+int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 {
 	double v_temp = 0.0;
 	double v2 = 0.0;
@@ -85,7 +86,8 @@ int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* n
 	d_v.push_back(perem[__c1]);
 	d_v.push_back(perem[__c2]);
 
-	for (int i = 0; perem[__x] < max_x && (perem[__v1] < max_v && perem[__v1]>min_v); i++)
+
+	for (int i = 0; perem[gran[_x_u]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
 	{
 		//вычисление 
 		v_temp = st_RK_1(perem,start_p, k, 0);
@@ -93,12 +95,12 @@ int m_RK3_1_r(double* start_p, double max_x, double min_v, double max_v, char* n
 
 		perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
 
-		if (stat_h) //c изминением шага или без
+		if (gran[__contr_e]) //c изминением шага или без
 		{
 			//условие, если рез функции зашел за наши параметры
 			if (perem[__s] > EPS)
 			{
-				//i--;
+				i--;
 				perem[__h1] = perem[__h1] / 2;
 				perem[__c1] += 1.0;
 				continue;
