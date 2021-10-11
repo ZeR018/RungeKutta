@@ -13,4 +13,4 @@ using namespace std;
 
 double st_RK_1(double* perem, double* start_p, double *k, int j);
 
-int m_RK3_1_r(double* start_p,int* gran, char* name_txt, double** py);
+int m_RK3_1_r(double* ,int* , char* , double** );

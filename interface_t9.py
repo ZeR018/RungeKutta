@@ -138,6 +138,10 @@ class Interface:
         
         print(use_it) # проверка
 
+        # for z in range(int(_i.value/p['k'])):
+        #     print("i: ",z,"\tx: ",d[p['x']+z*p['k']],"\tv: ",d[p['v1']+z*p['k']],"\te: ",d[p['e']+z*p['k']],"\th: ",d[p['h']+z*p['k']],"\tu: ",d[p['u']+z*p['k']],"\tE: ",d[p['E']+z*p['k']],"\tC1: ",d[p['c1']+z*p['k']],"\tC2: ",d[p['c2']+z*p['k']],"\n")
+
+
         #удаляем память
         dll.del_mem(byref(d))
         

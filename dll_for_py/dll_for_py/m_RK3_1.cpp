@@ -7,7 +7,7 @@
 //																что равносильно perem[1]						
 enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E,__c1,__c2 };
 enum {__x0,__v0,__h0,__a1,__a3,__m,__e,__max_step, __gran};
-enum {_x_u, __contr_e};
+enum {_xu, __contr_e};
 
 #define EPS 0.01
 #define P 3
@@ -87,7 +87,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	d_v.push_back(perem[__c2]);
 
 
-	for (int i = 0; perem[gran[_x_u]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
+	for (int i = 0; perem[gran[_xu]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
 	{
 		//вычисление 
 		v_temp = st_RK_1(perem,start_p, k, 0);
