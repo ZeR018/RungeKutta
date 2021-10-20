@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include"m_RK3_1.h"
 #include"fun.h"
+#include<fstream>
+
 
 //данные предоставляют сплошной массив, поэтому для удобства я сделал набор типо понятных символов
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
@@ -12,6 +14,8 @@ enum {_xu, __contr_e};
 #define EPS 0.01
 #define P 3
 #define P_SIZE 10
+
+
 
 // j здесь для сдвига массива по __h, опять же для памяти и быстродействия
 double st_RK_1(double* perem,double* start_p, double *k, int j)

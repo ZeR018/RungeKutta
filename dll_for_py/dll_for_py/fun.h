@@ -1,5 +1,4 @@
 #pragma once
-#include<fstream>
 #include<math.h>
 
 #define MAX_ARR 100

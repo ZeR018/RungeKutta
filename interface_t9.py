@@ -16,7 +16,7 @@ class Interface:
         self.a1 = tk.DoubleVar(master, 12)  # a1
         self.a3 = tk.DoubleVar(master, 21)  # a3
         self.m = tk.DoubleVar(master, 123)  # m
-        self.accuracy = tk.DoubleVar(master, 0.0001)  # точность выхода на границу
+        self.accuracy = tk.DoubleVar(master, 10.0)  # точность выхода на границу
         self.error = tk.DoubleVar(master, 0.001)  # контроль лок. поргрешности
         self.max_step = tk.DoubleVar(master, 10000000)  # макс. число шагов
         self.step = tk.DoubleVar(master, 0.01)  # начальный шаг
