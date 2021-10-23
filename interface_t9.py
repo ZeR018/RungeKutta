@@ -103,6 +103,7 @@ class Interface:
  
         # график
     def plotOnPlane(self, X, Y):
+        plt.close()
         f=plt.figure(num=2,figsize=(7,5),dpi=80)
         fig=plt.subplot(1,1,1)
         fig.set_title ('График')
