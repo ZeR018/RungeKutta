@@ -5,7 +5,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from tkinter import ttk
+from tkinter import ttk, END
+from PIL import Image, ImageTk
 
 class Interface:
     def __init__(self, master):
@@ -14,7 +15,7 @@ class Interface:
         master.iconphoto(False, self.photo)  # установка иконки
         master.title('Задача Коши для ОДУ')  # заголовок
         master.configure(bg='#ececec')  # фон
-        master.minsize(1110, 700)  # минимальный размер окна
+        master.minsize(1600, 720)  # минимальный размер окна
 
         self.x0 = tk.DoubleVar(master, 1)  # x0
         self.u0 = tk.DoubleVar(master, 2)  # u0
@@ -34,7 +35,7 @@ class Interface:
 
     def create_widgets(self):
         # место для задачи (открытие по кнопке)
-        exec_b = tk.Button(text='Задача', bg='#ececec', highlightbackground='#ececec', command=self.execute).grid(
+        exec_b = tk.Button(text='Задача', bg='#ececec', highlightbackground='#ececec', command=self.task_window).grid(
             row=0, column=0, columnspan=2, padx=10, pady=(10, 0), sticky='we')
 
         # начальные условия
@@ -83,8 +84,9 @@ class Interface:
 
         # справка (реализовать заполнение в функции execute)
         reference_l = tk.Label(text='Справка', bg='#ececec').grid(row=0, column=5, pady=10, sticky='we')
-        reference_t = tk.Text(height=14, highlightbackground='#cbcbcb').grid(row=1, column=5, rowspan=7, padx=(10, 10),
-                                                                             sticky='we')
+        self.reference_t = tk.Text(height=14,width = 120, highlightbackground='#cbcbcb')
+        self.reference_t.grid(row=1, column=5, rowspan=7, padx=(10, 10),
+              sticky='we')
 
         # таблица
     def tables (self, p, _i, d):
@@ -101,7 +103,7 @@ class Interface:
             self.table.insert('', tk.END, values=(z, (d[p['x']+z*p['k']]),(d[p['V']+z*p['k']]),d[p['e']+z*p['k']], d[p['h']+z*p['k']], d[p['U']+z*p['k']], d[p['E']+z*p['k']], d[p['c1']+z*p['k']], d[p['c2']+z*p['k']]))
                         
  
-        # график
+    # график
     def plotOnPlane(self, X, Y):
         plt.close()
         f=plt.figure(num=2,figsize=(7,5),dpi=80)
@@ -115,7 +117,44 @@ class Interface:
     def create_form_graph(self,figure):
         self.canvas=FigureCanvasTkAgg(figure,self.master)
         self.canvas.get_tk_widget().grid(row=9,column=1,columnspan=4,rowspan=1)
-        self.canvas.draw ()
+        self.canvas.draw()
+
+    # справка
+    def reference(self, p, _i, d):
+        self.reference_t.delete(1.0, END)
+        mul_counter = 0
+        div_counter = 0
+        max_step = self.step.get()
+        min_step = self.step.get()
+        max_error = 0
+        max_error_point = self.x0.get()
+        for z in range(int(_i.value / p['k'])):
+            if d[p['E']+z*p['k']] > max_error:
+                max_error = d[p['E']+z*p['k']]
+                max_error_point = d[p['x']+z*p['k']]
+            if d[p['c1']+z*p['k']] > div_counter:
+                div_counter = d[p['c1']+z*p['k']]
+            if d[p['c2']+z*p['k']] > mul_counter:
+                mul_counter = d[p['c2']+z*p['k']]
+            if d[p['h']+z*p['k']] > max_step:
+                max_step = d[p['h']+z*p['k']]
+            if d[p['h'] + z * p['k']] < min_step:
+                min_step = d[p['h'] + z * p['k']]
+        self.reference_t.insert(1.0, 'Число шагов: ' + str(int(_i.value / p['k'])) + '\n')
+        self.reference_t.insert(2.0, 'Число удвоений: ' + str(mul_counter) + '\n')
+        self.reference_t.insert(3.0, 'Число делений: ' + str(div_counter) + '\n')
+        self.reference_t.insert(4.0, 'Максимальный шаг: ' + str(max_step) + '\n')
+        self.reference_t.insert(5.0, 'Минимальный шаг: ' + str(min_step) + '\n')
+        self.reference_t.insert(6.0, 'Максимальная ошибка: ' + str(max_error) + ', в точке x = ' + str(max_error_point))
+
+    # окно задачи
+    def task_window(self):
+        task = tk.Toplevel()
+        task.title('Задача')
+        img = ImageTk.PhotoImage(Image.open("./task.jpg"))
+        panel = tk.Label(task, image = img)
+        panel.pack(side = 'bottom', fill = 'both', expand = 'yes')
+        task.mainloop()
 
     #  выполняется при нажатии кнопки "Вычислить"
     def execute(self):
@@ -173,8 +212,8 @@ class Interface:
         
         #print(use_it) # проверка
 
-        # for z in range(int(_i.value/p['k'])):
-        #     print("i: ",z,"\tx: ",d[p['x']+z*p['k']],"\tv: ",d[p['v1']+z*p['k']],"\te: ",d[p['e']+z*p['k']],"\th: ",d[p['h']+z*p['k']],"\tu: ",d[p['u']+z*p['k']],"\tE: ",d[p['E']+z*p['k']],"\tC1: ",d[p['c1']+z*p['k']],"\tC2: ",d[p['c2']+z*p['k']],"\n")
+        #for z in range(int(_i.value/p['k'])):
+        #    print("i: ",z,"\tx: ",d[p['x']+z*p['k']],"\tv: ",d[p['v1']+z*p['k']],"\te: ",d[p['e']+z*p['k']],"\th: ",d[p['h']+z*p['k']],"\tu: ",d[p['u']+z*p['k']],"\tE: ",d[p['E']+z*p['k']],"\tC1: ",d[p['c1']+z*p['k']],"\tC2: ",d[p['c2']+z*p['k']],"\n")
 
         X = []
         for z in range(int(_i.value/p['k'])):
@@ -187,7 +226,7 @@ class Interface:
         self.create_form_graph (self.figure)  #график
 
         self.tables (p, _i, d) #таблица
-
+        self.reference(p, _i, d)
 
         #удаляем память
         dll.del_mem(byref(d))
