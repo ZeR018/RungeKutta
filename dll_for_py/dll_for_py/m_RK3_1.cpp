@@ -15,6 +15,37 @@ enum {_xu, __contr_e};
 #define P 3
 #define P_SIZE 10
 
+struct v_value {
+	double v1;
+	double v2;
+};
+
+// ///////////////////////////////////////////////////////////////////////////////
+// в новой реализации у нас должны быть v1 и v2 в perem, тогда ошибок не будет
+// вместо k должно быть k1, k2
+// в стартовых параметрах start_p вместо старых параметров нужны k,f,m (ну и v1, v2)
+// пока не работает с половинным шагом!
+v_value st_RK_4(double* perem, double* start_p, double* k1, double *k2, int j)
+{
+	perem[__h2 + j] = perem[__h1 + j] / 2;
+
+	k1[0] = f1_11(perem[__x], perem[__v1], perem[__v2]);
+	k2[0] = f2_11(perem[__x], perem[__v1], perem[__v2], start_p[__k], start_p[__f], start_p[__m]);
+	
+	k1[1] = f1_11(perem[__h1 + j] / 2 + perem[__x], perem[__v1] + (perem[__h1 + j] / 2) * k1[0], perem[__v2] + (perem[__h1 + j] / 2) * k2[0]);
+	k2[1] = f2_11(perem[__h1 + j] / 2 + perem[__x], perem[__v1] + (perem[__h1 + j] / 2) * k1[0], perem[__v2] + (perem[__h1 + j] / 2) * k2[0], start_p[__k], start_p[__f], start_p[__m]);
+
+	k1[2] = f1_11(perem[__h1 + j] / 2 + perem[__x], perem[__v1] + (perem[__h1 + j] / 2) * k1[1], perem[__v2] + (perem[__h1 + j] / 2) * k2[1]);
+	k2[2] = f2_11(perem[__h1 + j] / 2 + perem[__x], perem[__v1] + (perem[__h1 + j] / 2) * k1[1], perem[__v2] + (perem[__h1 + j] / 2) * k2[1], start_p[__k], start_p[__f], start_p[__m]);
+
+	k1[3] = f1_11(perem[__h1 + j] + perem[__x], perem[__v1] + perem[__h1 + j] * k1[2], perem[__v2] + (perem[__h1 + j] / 2) * k2[2]);
+	k2[3] = f2_11(perem[__h1 + j] + perem[__x], perem[__v1] + perem[__h1 + j] * k1[2], perem[__v2] + (perem[__h1 + j] / 2) * k2[2], start_p[__k], start_p[__f], start_p[__m]);
+
+	v_value v;
+	v.v1 = (k1[0] + 2 * k1[1] + 2 * k1[2] + k1[3]) / 6 * perem[__h1 + j] + perem[__v1];
+	v.v2 = (k2[0] + 2 * k2[1] + 2 * k2[2] + k2[3]) / 6 * perem[__h1 + j] + perem[__v2];
+	return v;
+}
 
 
 // j здесь для сдвига массива по __h, опять же для памяти и быстродействия

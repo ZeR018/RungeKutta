@@ -3,12 +3,23 @@
 
 #define MAX_ARR 100
 #define KRAT_ARR 8
+#define g 9.81
 
 using namespace std;
 
 double f(double x, double v,double a1, double a3, double m)
 {
 	return - (a1 * v, + a3 * pow(v, 3)) / m;
+}
+
+double f1_11(double x, double v1, double v2)
+{
+	return v2;
+}
+
+double f2_11(double x, double v1, double v2, double k, double f, double m)
+{
+	return g * f - k * v1 / m;
 }
 
 
