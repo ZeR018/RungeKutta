@@ -33,11 +33,11 @@ double st_RK_1(double* perem,double* start_p, double *k, int j)
 	{
 		double tmp = (k[0] + 4 * k[1] + k[2]) / 6 * perem[__h1 + j] + perem[__v1];
 
-		k[0] = f(perem[__x], perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
+		k[0] = f(perem[__x], tmp, start_p[__a1], start_p[__a3], start_p[__m]);
 		//k[1] = f(h / 2 + x[0], _h[0] *k[0] + v1);
-		k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
+		k[1] = f(perem[__h1 + j] / 2 + perem[__x], perem[__h2 + j] * k[0] + tmp, start_p[__a1], start_p[__a3], start_p[__m]);
 		//k[2] = f(x + h, (-k + 2 * k)*h + v1);
-		k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + perem[__v1], start_p[__a1], start_p[__a3], start_p[__m]);
+		k[2] = f(perem[__x] + perem[__h1 + j], (-k[0] + 2 * k[1])*perem[__h1 + j] + tmp, start_p[__a1], start_p[__a3], start_p[__m]);
 	}
 
 	//return (k[0] + 4 * k[1] + k[2]) / 6 *(*h) + (*v1);
