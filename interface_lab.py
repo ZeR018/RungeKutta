@@ -1,5 +1,6 @@
 import tkinter as tk
-
+from ctypes import *
+import ctypes
 
 class Interface:
     def __init__(self, master):
@@ -9,12 +10,13 @@ class Interface:
         master.title('Задача Коши для ОДУ')  # заголовок
         master.configure(bg='#ececec')  # фон
         master.minsize(1110, 700)  # минимальный размер окна
-        self.x0 = tk.StringVar(master, '1')  # x0
-        self.u0 = tk.StringVar(master, '2')  # u0
-        self.accuracy = tk.StringVar(master, '0.00000001')  # точность выхода на границу
-        self.error = tk.StringVar(master, '0.0001')  # контроль лок. поргрешности
-        self.max_step = tk.StringVar(master, '10000000')  # максю число шагов
-        self.step = tk.StringVar(master, '0.01')  # начальный шаг
+        
+        self.x0 = tk.DoubleVar(master, 1)  # x0
+        self.u0 = tk.DoubleVar(master, 2)  # u0
+        self.accuracy = tk.DoubleVar(master, 10.0)  # точность выхода на границу
+        self.error = tk.DoubleVar(master, 0.001)  # контроль лок. поргрешности
+        self.max_step = tk.DoubleVar(master, 10000000)  # макс. число шагов
+        self.step = tk.DoubleVar(master, 0.01)  # начальный шаг
         self.rb_var = tk.IntVar(master)  # хранит 0 или 1 (выход на границу x или u)
         self.rb_var.set(0)  # значение по умолчанию
         self.cb_var = tk.BooleanVar(master)  # хранит True или False (включен ли контроль погр-ти)
@@ -72,9 +74,51 @@ class Interface:
     #  выполняется при нажатии кнопки "Вычислить"
     def execute(self):
         data = [
-            self.x0.get(), self.u0.get(), self.accuracy.get(), self.error.get(), self.max_step.get(), self.step.get(),
+            self.x0.get(), self.u0.get(),   0.0     , self.accuracy.get(), self.error.get(), self.max_step.get(), self.step.get(),
             self.rb_var.get(), self.cb_var.get()]
-        print(data)
+
+        init_params = (c_double*10)()
+        init_params[0] = self.x0.get()
+        init_params[1] = self.u0.get()
+        init_params[2] = data[2]
+        init_params[3] = self.step.get()
+        init_params[4] = 1.0
+        init_params[5] = 1.0
+        init_params[6] = 1.0
+        init_params[7] = self.error.get()
+        init_params[8] = self.max_step.get()
+        init_params[9] = self.accuracy.get()
+        
+        button_data = (c_int*2)()
+        button_data[0] = self.rb_var.get()      # выбор границы 0 - x, 1 - u
+        button_data[1] = self.cb_var.get() 
+
+        dll = cdll.LoadLibrary("dll_for_py//x64//Release//dll_for_py.dll")
+
+
+        #подрубаем dll
+        dll = cdll.LoadLibrary("dll_for_py//x64//Release//dll_for_py.dll")
+        #вроде нужно чтобы работало
+        dll.work_RK31R.argtypes = [POINTER(POINTER(c_double))]
+        dll.work_RK31R.restype = None
+        #---------------------------------------------------------
+        dll.del_mem.argtypes = [POINTER(POINTER(c_double))]
+        dll.work_RK31R.restype = None
+
+        #для ракрытия массива
+        #p = {'k':8,'x': 0,'V': 1,'e': 2,'h': 3,'U':4,'E':5,'c1':6,'c2':7}
+
+        #главный массив
+        d = POINTER(c_double)()
+
+        #количество эл в массиве
+        _i = (c_int)()
+
+        #работа
+        dll.work_RK31R(byref(d),byref(init_params),byref(button_data),byref(_i))
+
+
+        print(d[7])
 
 
 root = tk.Tk()

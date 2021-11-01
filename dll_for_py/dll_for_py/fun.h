@@ -2,7 +2,7 @@
 #include<math.h>
 
 #define MAX_ARR 100
-#define KRAT_ARR 8
+#define KRAT_ARR 10
 #define g 9.81
 
 using namespace std;
