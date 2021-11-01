@@ -7,13 +7,13 @@
 //данные предоставляют сплошной массив, поэтому для удобства я сделал набор типо понятных символов
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
-enum { __x, __s, __h1, __h2, __h3, __E,__c1,__c2 };
+enum { __x,__v1,__v2, __s, __h1, __h2, __h3,__u1,__u2, __E,__c1,__c2 };
 enum {__x0,__v01,__v02,__h0,__k,__f,__m,__e,__max_step, __gran};
 enum {_xu, __contr_e};
 
 #define EPS 0.01
 #define P 3
-#define P_SIZE 8
+#define P_SIZE 12
 
 struct v_value {
 	double v1;
@@ -89,7 +89,8 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	double v2 = 0.0;
 	//------------------x---v1---e---h
 	double perem[P_SIZE] = {};
-	double k[3] = {};
+	double k1[3] = {};
+	double k2[3] = {};
 	int z = 0;
 	double tmp = 0.0;
 	vector<double> d_v;
@@ -102,28 +103,26 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 
 	//инициализация массива
 	perem[__x] = start_p[__x0];
-	v_value v_val;
-	v_val.v1 = start_p[__v01];
-	v_val.v2 = start_p[__v02];
-	perem[__s] = 0.0;
+	perem[__v1] = start_p[__v01];
+	perem[__v2] = start_p[__v02];
+	perem[__s] = start_p[__s];
 	perem[__h1] = start_p[__h0];
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
-	v_value u_val;
-	u_val.v1 = start_p[__v01];
-	u_val.v2 = start_p[__v02];
+	perem[__u1] = start_p[__v01];
+	perem[__u2] = start_p[__v02];
 	perem[__E] = 0.0;
 	perem[__c1] = 0.0;
 	perem[__c2] = 0.0;
 
 	//добавление в вектор 1-х значений
 	d_v.push_back(perem[__x]);
-	d_v.push_back(v_val.v1);
-	d_v.push_back(v_val.v2);
+	d_v.push_back(perem[__v1]);
+	d_v.push_back(perem[__v2]);
 	d_v.push_back(perem[__s]);
 	d_v.push_back(perem[__h1]);
-	d_v.push_back(u_val.v1);
-	d_v.push_back(u_val.v1);
+	d_v.push_back(perem[__u1]);
+	d_v.push_back(perem[__u2]);
 	d_v.push_back(perem[__E]);
 	d_v.push_back(perem[__c1]);
 	d_v.push_back(perem[__c2]);
@@ -132,10 +131,15 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	for (int i = 0; perem[gran[_xu]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
 	{
 		//вычисление 
-		v_temp = st_RK_1(perem,start_p, k, 0);
+		v_value temp;
+
+		v_temp = st_RK_4(perem,start_p, k, 0);
 		v2 = st_RK_1(perem,start_p, k, 1);
 
-		perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
+
+
+		//Вычисляем S---------------------------
+		//perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
 
 		if (gran[__contr_e]) //c изминением шага или без
 		{
@@ -156,8 +160,8 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 			}
 		}
 
-		perem[__u] = st_true_sol_ex_9(perem, start_p);
-		perem[__E] = fabs(perem[__u] - perem[__v1]);
+		//perem[__u] = st_true_sol_ex_9(perem, start_p);
+		//perem[__E] = fabs(perem[__u] - perem[__v1]);
 
 		//----------------------------------------------------------------------
 
