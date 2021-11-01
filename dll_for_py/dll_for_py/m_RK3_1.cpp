@@ -151,39 +151,38 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	d_v.push_back(perem[__c1]);
 	d_v.push_back(perem[__c2]);
 
-	v_value temp;
+	v_value temp1;
+	v_value temp2;
 
 	for (int i = 0; perem[gran[0]] < start_p[__gran] && i < static_cast<int>(start_p[__max_step]); i++)
 	{
 		//вычисление 
 		
 
-		temp = st_RK_4(perem,start_p, k1,k2, 0);
-		//v2 = st_RK_1(perem,start_p, k, 1);
-		perem[__v1] = temp.v1;
-		perem[__v2] = temp.v2;
+		temp1 = st_RK_4(perem,start_p, k1,k2, 0);
+		temp2 = st_RK_4(perem,start_p, k1, k2, 1);
 
 		//¬ычисл€ем S---------------------------
-		//perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
+		perem[__s] = fabs((temp1.v1 - temp2.v1) / (pow(2, P) - 1) * pow(2, P));
 
-		//if (gran[__contr_e]) //c изминением шага или без
-		//{
-		//	//условие, если рез функции зашел за наши параметры
-		//	if (perem[__s] > EPS)
-		//	{
-		//		i--;
-		//		perem[__h1] = perem[__h1] / 2;
-		//		perem[__c1] += 1.0;
-		//		continue;
-		//	}
-		//
-		//	if (perem[__s] < EPS / pow(2, P + 1))
-		//	{
-		//		perem[__h1] = perem[__h1] * 2;
-		//		perem[__c2] += 1.0;
-		//
-		//	}
-		//}
+		if (gran[__contr_e]) //c изминением шага или без
+		{
+			//условие, если рез функции зашел за наши параметры
+			if (perem[__s] > EPS)
+			{
+				i--;
+				perem[__h1] = perem[__h1] / 2;
+				perem[__c1] += 1.0;
+				continue;
+			}
+		
+			if (perem[__s] < EPS / pow(2, P + 1))
+			{
+				perem[__h1] = perem[__h1] * 2;
+				perem[__c2] += 1.0;
+		
+			}
+		}
 
 		//perem[__u] = st_true_sol_ex_9(perem, start_p);
 		//perem[__E] = fabs(perem[__u] - perem[__v1]);
@@ -191,7 +190,9 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		//----------------------------------------------------------------------
 
 		//пихаем значени€ и погрешность
-		//perem[__v1] = v_temp;
+
+		perem[__v1] = temp1.v1;
+		perem[__v2] = temp1.v2;
 
 		//кидаем в вектор то что нужно
 		d_v.push_back(perem[__x]);
