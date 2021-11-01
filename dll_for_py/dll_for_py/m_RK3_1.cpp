@@ -48,7 +48,7 @@ double st_RK_1(double* perem,double* start_p, double *k, int j)
 // На данный момент не используется
 double st_true_sol_ex_9(double *perem, double* start_p)
 {
-	return sqrt(start_p[__a1]) / sqrt(( (start_p[__a3] + start_p[__a1] / pow(start_p[__u], 2)) * exp(2* start_p[__a1]* start_p[__m]*(perem[__x]- start_p[__x0]) ))- start_p[__a3]);
+	return (sqrt(start_p[__a1])) / (sqrt((start_p[__a3] + (start_p[__a1] / pow(start_p[__u], 2))) * exp(2* start_p[__a1]* start_p[__m]*(perem[__x]- start_p[__x0]) )- start_p[__a3]));
 }
 
 
