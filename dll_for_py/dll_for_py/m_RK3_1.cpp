@@ -7,13 +7,13 @@
 //данные предоставляют сплошной массив, поэтому для удобства я сделал набор типо понятных символов
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
-enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E,__c1,__c2 };
-enum {__x0,__v0,__h0,__a1,__a3,__m,__e,__max_step, __gran};
+enum { __x, __s, __h1, __h2, __h3, __E,__c1,__c2 };
+enum {__x0,__v01,__v02,__h0,__k,__f,__m,__e,__max_step, __gran};
 enum {_xu, __contr_e};
 
 #define EPS 0.01
 #define P 3
-#define P_SIZE 10
+#define P_SIZE 8
 
 struct v_value {
 	double v1;
@@ -77,10 +77,10 @@ double st_RK_1(double* perem,double* start_p, double *k, int j)
 
 // Истинное решение задачи 9 в точке perem[__x] при начальных условиях u(x0)=u0
 // На данный момент не используется
-double st_true_sol_ex_9(double *perem, double* start_p)
-{
-	return sqrt(start_p[__a1]) / sqrt(( (start_p[__a3] + start_p[__a1] / pow(start_p[__u], 2)) * exp(2* start_p[__a1]* start_p[__m]*(perem[__x]- start_p[__x0]) ))- start_p[__a3]);
-}
+//double st_true_sol_ex_9(double *perem, double* start_p)
+//{
+//	return sqrt(start_p[__a1]) / sqrt(( (start_p[__a3] + start_p[__a1] / pow(start_p[__u], 2)) * exp(2* start_p[__a1]* start_p[__m]*(perem[__x]- start_p[__x0]) ))- start_p[__a3]);
+//}
 
 
 int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
@@ -98,25 +98,32 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	string name = string(name_txt);
 	ofstream _f(name);
 
+	
 
 	//инициализация массива
 	perem[__x] = start_p[__x0];
-	perem[__v1] = start_p[__v0];
+	v_value v_val;
+	v_val.v1 = start_p[__v01];
+	v_val.v2 = start_p[__v02];
 	perem[__s] = 0.0;
 	perem[__h1] = start_p[__h0];
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
-	perem[__u] = start_p[__v0];
+	v_value u_val;
+	u_val.v1 = start_p[__v01];
+	u_val.v2 = start_p[__v02];
 	perem[__E] = 0.0;
 	perem[__c1] = 0.0;
 	perem[__c2] = 0.0;
 
 	//добавление в вектор 1-х значений
 	d_v.push_back(perem[__x]);
-	d_v.push_back(perem[__v1]);
+	d_v.push_back(v_val.v1);
+	d_v.push_back(v_val.v2);
 	d_v.push_back(perem[__s]);
 	d_v.push_back(perem[__h1]);
-	d_v.push_back(perem[__u]);
+	d_v.push_back(u_val.v1);
+	d_v.push_back(u_val.v1);
 	d_v.push_back(perem[__E]);
 	d_v.push_back(perem[__c1]);
 	d_v.push_back(perem[__c2]);
