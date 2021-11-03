@@ -44,6 +44,16 @@ double st_RK_1(double* perem,double* start_p, double *k, int j)
 	return (k[0] + 4 * k[1] + k[2]) / 6 * perem[__h1 + j] + perem[__v1];
 }
 
+double st_RK(double (*f)(double, double, double, double, double), double x, double v, double h, double* start_p, double* k)
+{
+	k[0] = f(x, v, start_p[__a1], start_p[__a3], start_p[__m]);
+	k[1] = f(x + h/2, v + h * k[0] / 2, start_p[__a1], start_p[__a3], start_p[__m]);
+	k[2] = f(x + h / 2, v + h * (-k[0] + 2 * k[1]), start_p[__a1], start_p[__a3], start_p[__m]);
+
+	return (k[0] + 4 * k[1] + k[2]) / 6 * h + v;
+
+}
+
 // Истинное решение задачи 9 в точке perem[__x] при начальных условиях u(x0)=u0
 // На данный момент не используется
 double st_true_sol_ex_9(double *perem, double* start_p)
@@ -56,6 +66,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 {
 	double v_temp = 0.0;
 	double v2 = 0.0;
+	double s_temp = 0.0;
 	//------------------x---v1---e---h
 	double perem[P_SIZE] = {};
 	double k[3] = {};
@@ -84,7 +95,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	d_v.push_back(perem[__x]);
 	d_v.push_back(perem[__v1]);
 	d_v.push_back(perem[__s]);
-	d_v.push_back(perem[__h1]);
+	d_v.push_back(0.0);
 	d_v.push_back(perem[__u]);
 	d_v.push_back(perem[__E]);
 	d_v.push_back(perem[__c1]);
@@ -94,15 +105,20 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	for (int i = 0; perem[gran[_xu]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
 	{
 		//вычисление 
-		v_temp = st_RK_1(perem,start_p, k, 0);
-		v2 = st_RK_1(perem,start_p, k, 1);
+		//v_temp = st_RK_1(perem,start_p, k, 0);
+		//v2 = st_RK_1(perem,start_p, k, 1);
 
-		perem[__s] = fabs((perem[__v1] - v2) / (pow(2, P) - 1) * pow(2, P));
+		v_temp = st_RK(f, perem[__x], perem[__v1], perem[__h1], start_p, k);
+
+		v2 = st_RK(f, perem[__x], perem[__v1], perem[__h1] / 2, start_p, k);
+		v2 = st_RK(f, perem[__x] + perem[__h1] / 2, v2, perem[__h1] / 2, start_p, k);
+
+		s_temp = fabs((v2 - v_temp) / (pow(2, P) - 1));
 
 		if (gran[__contr_e]) //c изминением шага или без
 		{
 			//условие, если рез функции зашел за наши параметры
-			if (perem[__s] > EPS)
+			if (s_temp > start_p[__e])
 			{
 				i--;
 				perem[__h1] = perem[__h1] / 2;
@@ -110,7 +126,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 				continue;
 			}
 
-			if (perem[__s] < EPS / pow(2, P + 1))
+			if (s_temp < start_p[__e] / pow(2, P + 1))
 			{
 				perem[__h1] = perem[__h1] * 2;
 				perem[__c2] += 1.0;
@@ -118,13 +134,17 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 			}
 		}
 
-		perem[__u] = st_true_sol_ex_9(perem, start_p);
-		perem[__E] = fabs(perem[__u] - perem[__v1]);
-
 		//----------------------------------------------------------------------
 
 		//пихаем значения и погрешность
 		perem[__v1] = v_temp;
+		perem[__s] = s_temp * pow(2, P);
+
+		perem[__u] = st_true_sol_ex_9(perem, start_p);
+		perem[__E] = fabs(perem[__u] - perem[__v1]);
+
+		//увеличиваем x
+		perem[__x] += perem[__h1];
 
 		//кидаем в вектор то что нужно
 		d_v.push_back(perem[__x]);
@@ -135,11 +155,6 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		d_v.push_back(perem[__E]);
 		d_v.push_back(perem[__c1]);
 		d_v.push_back(perem[__c2]);
-
-
-
-		//увеличиваем x
-		perem[__x] += perem[__h1];
 	}
 
 	//собираем массив и кидаем в питон
