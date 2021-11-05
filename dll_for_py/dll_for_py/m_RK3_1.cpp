@@ -83,7 +83,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	perem[__x] = start_p[__x0];
 	perem[__v1] = start_p[__v0];
 	perem[__s] = 0.0;
-	perem[__h1] = 0.0;
+	perem[__h1] = start_p[__h0];
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
 	perem[__u] = start_p[__v0];
@@ -102,22 +102,8 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	d_v.push_back(perem[__c2]);
 
 
-	perem[__h1] = start_p[__h0];
-
 	for (int i = 0; perem[gran[_xu]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
 	{
-		if (z)
-		{
-			perem[__h1] = perem[__h1] * 2;
-			perem[__c2] += 1.0;
-		}
-
-		z = 0;
-		 
-		//увеличиваем x
-		perem[__x] += perem[__h1];
-
-
 		//вычисление 
 		//v_temp = st_RK_1(perem,start_p, k, 0);
 		//v2 = st_RK_1(perem,start_p, k, 1);
@@ -135,7 +121,6 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 			if (s_temp > start_p[__e])
 			{
 				i--;
-				perem[__x] -= perem[__h1];
 				perem[__h1] = perem[__h1] / 2;
 				perem[__c1] += 1.0;
 				continue;
@@ -143,7 +128,17 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 
 			if (s_temp < start_p[__e] / pow(2, P + 1))
 			{
-				z = 1;
+				perem[__h1] = perem[__h1] * 2;
+				perem[__c2] += 1.0;
+
+				// пересчитываем s_temp
+				v_temp = st_RK(f, perem[__x], perem[__v1], perem[__h1], start_p, k);
+
+				v2 = st_RK(f, perem[__x], perem[__v1], perem[__h1] / 2, start_p, k);
+				v2 = st_RK(f, perem[__x] + perem[__h1] / 2, v2, perem[__h1] / 2, start_p, k);
+
+				s_temp = fabs((v2 - v_temp) / (pow(2, P) - 1));
+
 			}
 		}
 
@@ -156,7 +151,8 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		perem[__u] = st_true_sol_ex_9(perem, start_p);
 		perem[__E] = fabs(perem[__u] - perem[__v1]);
 
-		
+		//увеличиваем x
+		perem[__x] += perem[__h1];
 
 		//кидаем в вектор то что нужно
 		d_v.push_back(perem[__x]);
@@ -167,8 +163,6 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		d_v.push_back(perem[__E]);
 		d_v.push_back(perem[__c1]);
 		d_v.push_back(perem[__c2]);
-
-
 	}
 
 	//собираем массив и кидаем в питон
