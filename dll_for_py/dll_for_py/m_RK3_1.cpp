@@ -140,6 +140,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 				std::cout << "im here2!";
 				break;
 			}
+			perem[__c1] += 1.0;
 			continue;
 		}
 		//-----------------------------------------------------------
@@ -166,6 +167,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 				std::cout << "im here1!";
 				break;
 			}
+			perem[__c1] += 1.0;
 			continue;
 		}
 
