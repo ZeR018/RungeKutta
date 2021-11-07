@@ -13,7 +13,7 @@ class Interface:
         self.master = master  # инициализируем основное окно
         self.photo = tk.PhotoImage(file='logo.png')  # загрузка иконки приложения
         master.iconphoto(False, self.photo)  # установка иконки
-        master.title('Задача Коши для ОДУ')  # заголовок
+        master.title('Задача Коши для ОДУ задача №9 Варварин Е.')  # заголовок
         master.configure(bg='#ececec')  # фон
         master.minsize(1600, 720)  # минимальный размер окна
 

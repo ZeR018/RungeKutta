@@ -1,11 +1,9 @@
-﻿  stdafx.cpp
-  dllmain.cpp
-  dll_for_py.cpp
-  m_RK3_1.cpp
-C:\work\cpp_python\git\RungeKutta\dll_for_py\dll_for_py\m_RK3_1.cpp(114,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+﻿  m_RK3_1.cpp
+C:\work\cpp_python\git\RungeKutta\dll_for_py\dll_for_py\m_RK3_1.cpp(177,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
      Создается библиотека C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.lib и объект C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.exp
   Создание кода
-  Previous IPDB not found, fall back to full compilation.
-  All 206 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  2 of 211 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
   dll_for_py.vcxproj -> C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll
