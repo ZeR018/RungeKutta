@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import ttk, END
+from tkinter import *
 from PIL import Image, ImageTk
 
 class Interface:
@@ -13,7 +14,7 @@ class Interface:
         self.master = master  # инициализируем основное окно
         self.photo = tk.PhotoImage(file='logo.png')  # загрузка иконки приложения
         master.iconphoto(False, self.photo)  # установка иконки
-        master.title('Задача Коши для ОДУ')  # заголовок
+        master.title('Задача Коши для ОДУ выполнил Варварин Евгений')  # заголовок
         master.configure(bg='#ececec')  # фон
         master.minsize(1600, 720)  # минимальный размер окна
 
@@ -44,6 +45,7 @@ class Interface:
         cond_xe = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.x0).grid(row=2, column=1, padx=(0, 10))
         cond_ul = tk.Label(text='u0', bg='#ececec').grid(row=3, column=0, padx=(10, 0), sticky='w')
         cond_ue = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.u0).grid(row=3, column=1, padx=(0, 10))
+        cond_p = tk.Label(text='Параметры', bg='#ececec').grid(row=4, column=0, columnspan=2)
         cond_a1l = tk.Label(text='a1', bg='#ececec').grid(row=5, column=0, padx=(10, 0), sticky='w')
         cond_a1e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.a1).grid(row=5, column=1, padx=(0, 10))
         cond_a3l = tk.Label(text='a3', bg='#ececec').grid(row=6, column=0, padx=(10, 0), sticky='w')
@@ -83,9 +85,9 @@ class Interface:
                                                                                       padx=(10, 0), sticky='we')
 
         # справка (реализовать заполнение в функции execute)
-        reference_l = tk.Label(text='Справка', bg='#ececec').grid(row=0, column=5, pady=10, sticky='we')
-        self.reference_t = tk.Text(height=14,width = 120, highlightbackground='#cbcbcb')
-        self.reference_t.grid(row=1, column=5, rowspan=7, padx=(10, 10),
+        reference_l = tk.Label(text='Справка', bg='#ececec').grid(row=0, column=5, pady=10, padx=10, sticky='we')
+        self.reference_t = tk.Text(height=14,width = 110, highlightbackground='#cbcbcb')
+        self.reference_t.grid(row=1, column=5, columnspan=4, rowspan=7, padx=(10, 10),
               sticky='we')
 
         # таблица
@@ -93,24 +95,29 @@ class Interface:
         heads = ['k', 'x', 'V', 'e', 'h', 'U' , 'E','C1', 'C2']
         self.table = ttk.Treeview(self.master, show='headings')
         self.table['columns']=heads
-        self.table.grid(row=9, column=5, columnspan=1, rowspan=10, padx=10, sticky = tk.NSEW)
+        self.table.grid(row=9, column=5, columnspan=4, rowspan=10, padx=(10,0), sticky = tk.NSEW)
         for header in heads:
             self.table.heading(header,text=header, anchor='center')
             self.table.column(header,anchor='center')
-            self.table.column(header,width=73)
+            self.table.column(header,width=8)
+        self.table.column('e', width=100)
+        self.table.column('V', width=100)
+        self.table.column('E', width=100)
         
         for z in range(int(_i.value/p['k'])):
-            self.table.insert('', tk.END, values=(z, (d[p['x']+z*p['k']]),(d[p['V']+z*p['k']]),d[p['e']+z*p['k']], d[p['h']+z*p['k']], d[p['U']+z*p['k']], d[p['E']+z*p['k']], d[p['c1']+z*p['k']], d[p['c2']+z*p['k']]))
-                        
+            self.table.insert('', tk.END, values=(z, (d[p['x']+z*p['k']]),(d[p['V']+z*p['k']]),d[p['e']+z*p['k']], d[p['h']+z*p['k']], d[p['U']+z*p['k']], d[p['E']+z*p['k']], int(d[p['c1']+z*p['k']]), int(d[p['c2']+z*p['k']])))
+        scroll_bar1 = Scrollbar(self.master, orient=VERTICAL, command=self.table.yview)
+        scroll_bar1.grid(row=9, column=9, padx=10, sticky=tk.NSEW)
+        self.table.configure(yscroll=scroll_bar1.set)                
  
     # график
     def plotOnPlane(self, X, Y):
         plt.close()
         f=plt.figure(num=2,figsize=(7,5),dpi=80)
         fig=plt.subplot(1,1,1)
-        fig.set_title ('График')
-        fig.set_xlabel ('x')
-        fig.set_ylabel ('U(x)')
+        fig.set_title ('График зависимости скорости U от времени x')
+        fig.set_xlabel ('x, сек.')
+        fig.set_ylabel ('U(x), м/сек.')
         fig.plot (X, Y, '-k')
         return f
 

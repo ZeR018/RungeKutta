@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll</FullPath>
+      <FullPath>C:\Users\nedos\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
