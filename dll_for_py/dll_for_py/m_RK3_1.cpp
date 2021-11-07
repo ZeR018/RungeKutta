@@ -8,7 +8,7 @@
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
 enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E,__c1,__c2 };
-enum {__x0,__v0,__h0,__a1,__a3,__m,__e,__max_step, __gran};
+enum {__x0,__v0,__h0,__a1,__a3,__m,__e,__max_step, __gran, __toch};
 enum {_xu, __contr_e};
 
 #define EPS 0.01
@@ -104,8 +104,19 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 
 	perem[__h1] = start_p[__h0];
 
-	for (int i = 0; perem[gran[_xu]] < start_p[__gran] && i<static_cast<int>(start_p[__max_step]); i++)
+
+	int j = 1;
+
+	for (int i = 0; ; i++)
 	{
+		//max step-------------------------------------
+		if (i > static_cast<int>(start_p[__max_step]))
+		{
+			std::cout << "im here3!";
+			break;
+		}
+
+
 		if (z)
 		{
 			perem[__h1] = perem[__h1] * 2;
@@ -113,9 +124,25 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		}
 
 		z = 0;
-		 
+
 		//увеличиваем x
 		perem[__x] += perem[__h1];
+
+		//gran x------------------------------------------------
+		if (gran[_xu] == 0 && start_p[__gran] + start_p[__toch] < perem[__x])
+		{
+			perem[__x] -= perem[__h1];
+			i--;
+			j = 0;
+			perem[__h1] /= 2;
+			if(perem[__h1] < start_p[__toch])
+			{
+				std::cout << "im here2!";
+				break;
+			}
+			continue;
+		}
+		//-----------------------------------------------------------
 
 
 		//вычисление 
@@ -127,27 +154,52 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		v2 = st_RK(f, perem[__x], perem[__v1], perem[__h1] / 2, start_p, k);
 		v2 = st_RK(f, perem[__x] + perem[__h1] / 2, v2, perem[__h1] / 2, start_p, k);
 
+		//gran u--------------------------------------------
+		if (gran[_xu] && start_p[__gran] - start_p[__toch] > v_temp)
+		{
+			perem[__x] -= perem[__h1];
+			i--;
+			j = 0;
+			perem[__h1] /= 2;
+			if (perem[__h1] < start_p[__toch])
+			{
+				std::cout << "im here1!";
+				break;
+			}
+			continue;
+		}
+
+
+
 		s_temp = fabs((v2 - v_temp) / (pow(2, P) - 1));
 
-		if (gran[__contr_e]) //c изминением шага или без
-		{
-			//условие, если рез функции зашел за наши параметры
-			if (s_temp > start_p[__e])
-			{
-				i--;
-				perem[__x] -= perem[__h1];
-				perem[__h1] = perem[__h1] / 2;
-				perem[__c1] += 1.0;
-				continue;
-			}
 
-			if (s_temp < start_p[__e] / pow(2, P + 1))
+		if (j)
+		{
+			if (gran[__contr_e]) //c изминением шага или без
 			{
-				z = 1;
+				//условие, если рез функции зашел за наши параметры
+				if (s_temp > start_p[__e])
+				{
+					i--;
+					perem[__x] -= perem[__h1];
+					perem[__h1] = perem[__h1] / 2;
+					perem[__c1] += 1.0;
+					continue;
+				}
+
+				if (s_temp < start_p[__e] / pow(2, P + 1))
+				{
+					z = 1;
+				}
 			}
 		}
 
+
 		//----------------------------------------------------------------------
+
+
+	
 
 		//пихаем значения и погрешность
 		perem[__v1] = v_temp;
