@@ -126,7 +126,6 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		//max step-------------------------------------
 		if (i > static_cast<int>(start_p[__max_step]))
 		{
-			std::cout << "im here3!";
 			break;
 		}
 
@@ -151,7 +150,6 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 			perem[__h1] /= 2;
 			if(perem[__h1] < start_p[__toch])
 			{
-				std::cout << "im here2!";
 				break;
 			}
 			perem[__c1] += 1.0;
@@ -178,7 +176,6 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 			perem[__h1] /= 2;
 			if (perem[__h1] < start_p[__toch])
 			{
-				std::cout << "im here1!";
 				break;
 			}
 			perem[__c1] += 1.0;

@@ -155,7 +155,7 @@ class Interface:
         min_step = self.step.get()
         max_error = 0
         max_error_point = self.x0.get()
-        for z in range(int(_i.value / p['k'])):
+        for z in range(1, int(_i.value / p['k'])):
             if d[p['E'] + z * p['k']] > max_error:
                 max_error = d[p['E'] + z * p['k']]
                 max_error_point = d[p['x'] + z * p['k']]
