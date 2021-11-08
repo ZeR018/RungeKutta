@@ -59,17 +59,12 @@ double st_RK(double (*f)(double, double, double, double, double), double x, doub
 double st_true_sol_ex_9(double *perem, double* start_p)
 {
 
-	double C = (2 * start_p[__a1] * start_p[__x0]) / start_p[__m] - log(start_p[__a1] / pow(start_p[__u0], 2) + start_p[__a3]);
+	double c = log( pow(start_p[__u0],2)/ (start_p[__a1]* pow(start_p[__u0], 2)+start_p[__a3] ))  + (2*start_p[__a3]*start_p[__x0])/start_p[__m]  ;
 
-	//double c = (exp(2*start_p[__a1]*start_p[__x0]/start_p[__m])) / (start_p[__a1]/pow(start_p[__u0],2) + start_p[__a3]);
+	double _exp = exp((-2 * start_p[__a3] * perem[__x]) / start_p[__m] + c);
 
-	//std::cout << "a1:" << start_p[__a1] << "\ta3:" << start_p[__a3] << "\tm:" << start_p[__m] << "\tx0:" << start_p[__x0] << "\tu0:" << start_p[__u0]<<"\n";
-	//std::cout << c << "\n";
-	
-	
-	//return sqrt(c * start_p[__a1] / (exp(2 * start_p[__a1] * perem[__x] / start_p[__m]) - c * start_p[__a1]));
-	return sqrt(start_p[__a1] / (exp((2 * start_p[__a1] * perem[__x]) / start_p[__m] - C) - start_p[__a3]));
-	
+	return sqrt((_exp * start_p[__a3]) / (1 - _exp * start_p[__a1]));
+
 	
 	//return sqrt(start_p[__a1] / (exp(2 * start_p[__a1] * (perem[__x] - start_p[__x0]) / start_p[__m]) / (start_p[__a1] / pow(start_p[__u0], 2) + start_p[__a3]) - start_p[__a3]));
 
