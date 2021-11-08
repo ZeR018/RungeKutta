@@ -1,9 +1,9 @@
 ﻿  m_RK3_1.cpp
-C:\work\cpp_python\git\RungeKutta\dll_for_py\dll_for_py\m_RK3_1.cpp(177,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-     Создается библиотека C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.lib и объект C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.exp
+C:\Users\Eugene\source\repos\RungeKutta\dll_for_py\dll_for_py\m_RK3_1.cpp(239,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+     Создается библиотека C:\Users\Eugene\source\repos\RungeKutta\dll_for_py\x64\Release\dll_for_py.lib и объект C:\Users\Eugene\source\repos\RungeKutta\dll_for_py\x64\Release\dll_for_py.exp
   Создание кода
-  2 of 211 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
+  3 of 202 functions ( 1.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
-  dll_for_py.vcxproj -> C:\work\cpp_python\git\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll
+  dll_for_py.vcxproj -> C:\Users\Eugene\source\repos\RungeKutta\dll_for_py\x64\Release\dll_for_py.dll
