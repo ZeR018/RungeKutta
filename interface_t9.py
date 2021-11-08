@@ -159,10 +159,12 @@ class Interface:
             if d[p['E'] + z * p['k']] > max_error:
                 max_error = d[p['E'] + z * p['k']]
                 max_error_point = d[p['x'] + z * p['k']]
-            if d[p['c1'] + z * p['k']] > div_counter:
-                div_counter = d[p['c1'] + z * p['k']]
-            if d[p['c2'] + z * p['k']] > mul_counter:
-                mul_counter = d[p['c2'] + z * p['k']]
+            div_counter += d[p['c1'] + z * p['k']]
+            #if d[p['c1'] + z * p['k']] > div_counter:
+            #    div_counter = d[p['c1'] + z * p['k']]
+            mul_counter += d[p['c2'] + z * p['k']]
+            #if d[p['c2'] + z * p['k']] > mul_counter:
+            #    mul_counter = d[p['c2'] + z * p['k']]
             if d[p['h'] + z * p['k']] > max_step:
                 max_step = d[p['h'] + z * p['k']]
             if d[p['h'] + z * p['k']] < min_step:

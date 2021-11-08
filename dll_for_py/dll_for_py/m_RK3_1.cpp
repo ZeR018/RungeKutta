@@ -8,7 +8,7 @@
 //например чтобы обратиться к v1 элементу массива(по сути 2-й по счету) надо написать perem[__v1]
 //																что равносильно perem[1]						
 enum { __x, __v1, __s, __h1, __h2, __h3, __u, __E,__c1,__c2 };
-enum {__x0,__v0,__h0,__a1,__a3,__m,__e,__max_step, __gran, __toch};
+enum {__x0,__u0,__h0,__a1,__a3,__m,__e,__max_step, __gran, __toch};
 enum {_xu, __contr_e};
 
 #define EPS 0.01
@@ -58,7 +58,21 @@ double st_RK(double (*f)(double, double, double, double, double), double x, doub
 // На данный момент не используется
 double st_true_sol_ex_9(double *perem, double* start_p)
 {
-	return sqrt(start_p[__a1]) / sqrt(( (start_p[__a3] + start_p[__a1] / pow(start_p[__u], 2)) * exp(2* start_p[__a1]* start_p[__m]*(perem[__x]- start_p[__x0]) ))- start_p[__a3]);
+
+	double C = (2 * start_p[__a1] * start_p[__x0]) / start_p[__m] - log(start_p[__a1] / pow(start_p[__u0], 2) + start_p[__a3]);
+
+	//double c = (exp(2*start_p[__a1]*start_p[__x0]/start_p[__m])) / (start_p[__a1]/pow(start_p[__u0],2) + start_p[__a3]);
+
+	//std::cout << "a1:" << start_p[__a1] << "\ta3:" << start_p[__a3] << "\tm:" << start_p[__m] << "\tx0:" << start_p[__x0] << "\tu0:" << start_p[__u0]<<"\n";
+	//std::cout << c << "\n";
+	
+	
+	//return sqrt(c * start_p[__a1] / (exp(2 * start_p[__a1] * perem[__x] / start_p[__m]) - c * start_p[__a1]));
+	return sqrt(start_p[__a1] / (exp((2 * start_p[__a1] * perem[__x]) / start_p[__m] - C) - start_p[__a3]));
+	
+	
+	//return sqrt(start_p[__a1] / (exp(2 * start_p[__a1] * (perem[__x] - start_p[__x0]) / start_p[__m]) / (start_p[__a1] / pow(start_p[__u0], 2) + start_p[__a3]) - start_p[__a3]));
+
 }
 
 
@@ -81,12 +95,12 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 
 	//инициализация массива
 	perem[__x] = start_p[__x0];
-	perem[__v1] = start_p[__v0];
+	perem[__v1] = start_p[__u0];
 	perem[__s] = 0.0;
 	perem[__h1] = 0.0;
 	perem[__h2] = 0.0;
 	perem[__h3] = 0.0;
-	perem[__u] = start_p[__v0];
+	perem[__u] = start_p[__u0];
 	perem[__E] = 0.0;
 	perem[__c1] = 0.0;
 	perem[__c2] = 0.0;
@@ -208,6 +222,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		perem[__s] = s_temp * pow(2, P);
 
 		perem[__u] = st_true_sol_ex_9(perem, start_p);
+		//std::cout << perem[__u] << "\n";
 		perem[__E] = fabs(perem[__u] - perem[__v1]);
 
 		
@@ -221,7 +236,8 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		d_v.push_back(perem[__E]);
 		d_v.push_back(perem[__c1]);
 		d_v.push_back(perem[__c2]);
-
+		perem[__c1] = 0.0;
+		perem[__c2] = 0.0;
 
 	}
 
