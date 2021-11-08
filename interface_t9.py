@@ -121,8 +121,12 @@ class Interface:
         self.table.column('E', width=100)
 
         for z in range(int(_i.value / p['k'])):
+            if d[p['e'] + z * p['k']] == 0:
+                _s = "<1e-16"
+            else :
+                _s = d[p['e'] + z * p['k']]
             self.table.insert('', tk.END, values=(
-            z, round((d[p['x'] + z * p['k']]), 4), (d[p['V'] + z * p['k']]), d[p['e'] + z * p['k']],
+            z, round((d[p['x'] + z * p['k']]), 4), (d[p['V'] + z * p['k']]),  _s,
             d[p['h'] + z * p['k']], d[p['U'] + z * p['k']], d[p['E'] + z * p['k']], int(d[p['c1'] + z * p['k']]),
             int(d[p['c2'] + z * p['k']])))
         scroll_bar1 = Scrollbar(self.master, orient=VERTICAL, command=self.table.yview)
