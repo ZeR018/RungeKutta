@@ -180,10 +180,10 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 
 
 		s_temp = fabs((v2 - v_temp) / (pow(2, P) - 1));
+		//std::cout << v2<<"   " << v_temp << "\n";
 
-
-		if (j)
-		{
+		//if (j)
+		//{
 			if (gran[__contr_e]) //c изминением шага или без
 			{
 				//условие, если рез функции зашел за наши параметры
@@ -201,7 +201,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 					z = 1;
 				}
 			}
-		}
+		//}
 
 
 		//----------------------------------------------------------------------
@@ -212,7 +212,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		//пихаем значения и погрешность
 		perem[__v1] = v_temp;
 		perem[__s] = s_temp * pow(2, P);
-
+		
 		perem[__u] = st_true_sol_ex_9(perem, start_p);
 		//std::cout << perem[__u] << "\n";
 		perem[__E] = fabs(perem[__u] - perem[__v1]);
