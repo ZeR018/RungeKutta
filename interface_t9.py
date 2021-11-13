@@ -38,9 +38,6 @@ class Interface:
         self.create_widgets()  # создание виджетов
 
     def create_widgets(self):
-        # место для задачи (открытие по кнопке)
-        exec_b = tk.Button(text='Задача', bg='#ececec', highlightbackground='#ececec', command=self.task_window).grid(
-            row=5, column=5, padx=10, pady=(10, 10), sticky='we')
 
         # начальные условия
         cond_l = tk.Label(text='Начальные условия', bg='#ececec', font='Helvetica 10 bold').grid(row=0, column=0,
@@ -50,7 +47,7 @@ class Interface:
         cond_xe = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.x0).grid(row=1, column=1, padx=(0, 10))
         cond_ul = tk.Label(text='u0', bg='#ececec').grid(row=2, column=0, padx=(10, 0), sticky='w')
         cond_ue = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.u0).grid(row=2, column=1, padx=(0, 10))
-        cond_p = tk.Label(text='Параметры системы', bg='#ececec').grid(row=3, column=0, columnspan=2)
+        cond_p = tk.Label(text='Параметры системы', bg='#ececec', font='Helvetica 10 bold').grid(row=3, column=0, columnspan=2)
         cond_a1l = tk.Label(text='a1', bg='#ececec').grid(row=4, column=0, padx=(10, 0), sticky='w')
         cond_a1e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.a1).grid(row=4, column=1, padx=(0, 10))
         cond_a3l = tk.Label(text='a3', bg='#ececec').grid(row=5, column=0, padx=(10, 0), sticky='w')
@@ -63,11 +60,19 @@ class Interface:
         self.canvas = tk.Canvas()
 
         # кнопка Вычислить
-        exec_b = tk.Button(text='Вычислить', bg='#ececec', highlightbackground='#ececec', command=self.execute).grid(
-            row=6, column=5, padx=10, pady=(0, 10), sticky='we')
+        exec_b = tk.Button(text='Вычислить', bg='#ececec', highlightbackground='#ececec', command=self.execute, width = 15).grid(
+            row=6, column=5, padx=(10,0), pady=(0, 10), sticky='we')
+
+        self.clear_b = tk.Button(text='Очистить график', bg='#ececec', highlightbackground='#ececec', command=self.cleanPlot, width = 15)
+
+        method_b = tk.Button(text='Метод', bg='#ececec', highlightbackground='#ececec', command=self.method, width = 15).grid(
+            row=5, column=6,padx=(10,10), pady=(10, 10), sticky='we')
+
+        task_b = tk.Button(text='Задача', bg='#ececec', highlightbackground='#ececec', command=self.task_window, width = 15).grid(
+            row=5, column=5, padx=(10,0), pady=(10, 10), sticky='we')
 
         # параметры програмы
-        param_l = tk.Label(text='Параметры программы', bg='#ececec', font='Helvetica 10 bold').grid(row=0, column=2,
+        param_l = tk.Label(text='Параметры метода', bg='#ececec', font='Helvetica 10 bold').grid(row=0, column=2,
                                                                                                     padx=10,
                                                                                                     columnspan=4,
                                                                                                     pady=(10, 0),
@@ -90,19 +95,19 @@ class Interface:
                                                                                                columnspan=3,
                                                                                                padx=(10, 0),
                                                                                                sticky='nwe')
-        accuracy_l = tk.Label(text='Точность выхода на границу', bg='#ececec').grid(row=1, column=5, padx=10,
+        accuracy_l = tk.Label(text='Точность выхода на границу', bg='#ececec').grid(row=1, column=5, columnspan = 2, padx=10,
                                                                                     sticky='w')
-        accuracy_e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.accuracy).grid(row=2, column=5,
+        accuracy_e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.accuracy).grid(row=2, column=5, columnspan = 2,
                                                                                               padx=(10, 0), sticky='we')
-        step_l = tk.Label(text='Начальный шаг', bg='#ececec').grid(row=3, column=5, padx=10, sticky='w')
-        step_e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.step).grid(row=4, column=5, columnspan=3,
+        step_l = tk.Label(text='Начальный шаг', bg='#ececec').grid(row=3, column=5, columnspan = 2, padx=10, sticky='w')
+        step_e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.step).grid(row=4, column=5, columnspan=2,
                                                                                       padx=(10, 0), sticky='we')
 
         # справка
-        reference_l = tk.Label(text='Справка', bg='#ececec', font='Helvetica 10 bold').grid(row=0, column=8, pady=10,
+        reference_l = tk.Label(text='Справка', bg='#ececec', font='Helvetica 10 bold').grid(row=0, column=7, pady=10,
                                                                                             padx=10, sticky='we')
         self.reference_t = tk.Text(height=10, width=110, highlightbackground='#cbcbcb')
-        self.reference_t.grid(row=1, column=8, rowspan=6, padx=(10, 10),
+        self.reference_t.grid(row=1, column=7, rowspan=6, padx=(10, 10),
                               sticky='we')
 
         # таблица
@@ -138,7 +143,6 @@ class Interface:
         # график
 
     def plotOnPlane(self, X, Y):
-        plt.close()
         f = plt.figure(num=2, figsize=(7, 5), dpi=80, facecolor='#ececec')
         fig = plt.subplot(1, 1, 1)
         fig.set_title('График зависимости скорости U от времени x')
@@ -146,6 +150,15 @@ class Interface:
         fig.set_ylabel('U(x), м/сек.')
         fig.plot(X, Y, '-k')
         return f
+
+    def cleanPlot(self):
+        plt.cla()
+        f = plt.figure(num=2, figsize=(7, 5), dpi=80, facecolor='#ececec')
+        fig = plt.subplot(1, 1, 1)
+        fig.set_title('График зависимости скорости U от времени x')
+        fig.set_xlabel('x, сек.')
+        fig.set_ylabel('U(x), м/сек.')
+        self.canvas.draw()
 
     def create_form_graph(self, figure):
         self.canvas = FigureCanvasTkAgg(figure, self.master)
@@ -158,30 +171,43 @@ class Interface:
         mul_counter = 0
         div_counter = 0
         max_step = self.step.get()
+        max_step_x = 0
         min_step = self.step.get()
+        min_step_x = 0
         max_error = 0
+        max_olp = 0
+        max_olp_x = 0
+        result_x = self.x0.get()
+        result_v = self.u0.get()
         max_error_point = self.x0.get()
         for z in range(1, int(_i.value / p['k'])):
+            if d[p['e'] + z * p['k']] > max_olp:
+                max_olp = d[p['e'] + z * p['k']]
+                max_olp_x = d[p['x'] + z * p['k']]
             if d[p['E'] + z * p['k']] > max_error:
                 max_error = d[p['E'] + z * p['k']]
                 max_error_point = d[p['x'] + z * p['k']]
             div_counter += d[p['c1'] + z * p['k']]
-            #if d[p['c1'] + z * p['k']] > div_counter:
-            #    div_counter = d[p['c1'] + z * p['k']]
             mul_counter += d[p['c2'] + z * p['k']]
-            #if d[p['c2'] + z * p['k']] > mul_counter:
-            #    mul_counter = d[p['c2'] + z * p['k']]
             if d[p['h'] + z * p['k']] > max_step:
                 max_step = d[p['h'] + z * p['k']]
+                max_step_x = d[p['x'] + z * p['k']]
             if d[p['h'] + z * p['k']] < min_step:
                 min_step = d[p['h'] + z * p['k']]
+                min_step_x = d[p['x'] + z * p['k']]
+            result_x = d[p['x'] + z * p['k']]
+            result_v = d[p['V'] + z * p['k']]
         self.reference_t.insert(1.0, 'Метод РК3\n\n')
-        self.reference_t.insert(3.0, 'Число шагов: ' + str(int(_i.value / p['k'])) + '\n')
+        self.reference_t.insert(3.0, 'Число шагов: ' + str(int(_i.value / p['k'])-1) + '\n')
         self.reference_t.insert(4.0, 'Число удвоений: ' + str(int(mul_counter)) + '\n')
         self.reference_t.insert(5.0, 'Число делений: ' + str(int(div_counter)) + '\n')
-        self.reference_t.insert(6.0, 'Максимальный шаг: ' + str(max_step) + '\n')
-        self.reference_t.insert(7.0, 'Минимальный шаг: ' + str(min_step) + '\n')
-        self.reference_t.insert(8.0, 'Максимальная ошибка: ' + str(max_error) + ', в точке x = ' + str(max_error_point))
+        self.reference_t.insert(6.0, 'Максимальный шаг: ' + str(max_step) + ', в точке x = ' + str(round(max_step_x, 4)) + '\n')
+        self.reference_t.insert(7.0, 'Минимальный шаг: ' + str(min_step) + ', в точке x = ' + str(round(min_step_x, 4)) + '\n')
+        self.reference_t.insert(8.0, 'Максимальная глобальная ошибка: ' + str(max_error) + ', в точке x = ' + str(round(max_error_point, 4))+ '\n')
+        self.reference_t.insert(9.0, 'Максимальная ОЛП: ' + str(max_olp) + ', в точке x = ' + str(
+            round(max_olp_x, 4)) + '\n')
+        self.reference_t.insert(10.0, 'Итоговые значения: x = ' + str(round(result_x, 4)) + ', V = ' + str(result_v) + '\n')
+
 
     # окно задачи
     def task_window(self):
@@ -192,8 +218,18 @@ class Interface:
         panel.pack(side='bottom', fill='both', expand='yes')
         task.mainloop()
 
+    def method(self):
+        task = tk.Toplevel()
+        task.title('Описание метода')
+        img = ImageTk.PhotoImage(Image.open("./method.jpg"))
+        panel = tk.Label(task, image=img)
+        panel.pack(side='bottom', fill='both', expand='yes')
+        task.mainloop()
+
     #  выполняется при нажатии кнопки "Вычислить"
     def execute(self):
+        self.clear_b.grid(
+            row=6, column=6, padx=10, pady=(0, 10), sticky='we')
         # записываем начальные условия задачи
         init_params = (c_double * 10)()
         init_params[0] = self.x0.get()
