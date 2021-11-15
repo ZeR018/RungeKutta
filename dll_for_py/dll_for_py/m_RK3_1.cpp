@@ -49,13 +49,11 @@ double st_RK(double (*f)(double, double, double, double, double), double x, doub
 	k[0] = f(x, v, start_p[__a1], start_p[__a3], start_p[__m]);
 	k[1] = f(x + h / 2, v + h * k[0] / 2, start_p[__a1], start_p[__a3], start_p[__m]);
 	k[2] = f(x + h / 2, v + h * (-k[0] + 2 * k[1]), start_p[__a1], start_p[__a3], start_p[__m]);
-
 	return (k[0] + 4 * k[1] + k[2]) / 6 * h + v;
 
 }
 
 // »стинное решение задачи 9 в точке perem[__x] при начальных услови€х u(x0)=u0
-// Ќа данный момент не используетс€
 double st_true_sol_ex_9(double* perem, double* start_p)
 {
 
@@ -64,10 +62,6 @@ double st_true_sol_ex_9(double* perem, double* start_p)
 	double _exp = exp((-2 * start_p[__a3] * perem[__x]) / start_p[__m] + c);
 
 	return sqrt((_exp * start_p[__a3]) / (1 - _exp * start_p[__a1]));
-
-
-	//return sqrt(start_p[__a1] / (exp(2 * start_p[__a1] * (perem[__x] - start_p[__x0]) / start_p[__m]) / (start_p[__a1] / pow(start_p[__u0], 2) + start_p[__a3]) - start_p[__a3]));
-
 }
 
 

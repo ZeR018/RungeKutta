@@ -8,7 +8,7 @@ using namespace std;
 
 double f(double x, double v,double a1, double a3, double m)
 {
-	return - (a1 * v, + a3 * pow(v, 3)) / m;
+	return - (a1 * v + a3 * (v * v * v)) / m;
 }
 
 

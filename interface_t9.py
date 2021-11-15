@@ -22,8 +22,8 @@ class Interface:
 
         self.x0 = tk.DoubleVar(master, 0)  # x0
         self.u0 = tk.DoubleVar(master, 2)  # u0
-        self.a1 = tk.DoubleVar(master, 10)  # a1
-        self.a3 = tk.DoubleVar(master, 20)  # a3
+        self.a1 = tk.DoubleVar(master, 0.1)  # a1
+        self.a3 = tk.DoubleVar(master, 0.5)  # a3
         self.m = tk.DoubleVar(master, 10)  # m
         self.border = tk.DoubleVar(master, 100.0)  # правая граница
         self.accuracy = tk.DoubleVar(master, 0.0001)  # точность выхода на правую границу
