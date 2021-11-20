@@ -115,7 +115,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 	for (int i = 0; ; i++)
 	{
 		//max step-------------------------------------
-		if (i > static_cast<int>(start_p[__max_step]))
+		if (i >= static_cast<int>(start_p[__max_step]))
 		{
 			break;
 		}
@@ -159,7 +159,7 @@ int m_RK3_1_r(double* start_p, int* gran, char* name_txt, double** py)
 		v2 = st_RK(f, perem[__x] + perem[__h1] / 2, v2, perem[__h1] / 2, start_p, k);
 
 		//gran u--------------------------------------------
-		if (gran[_xu] && start_p[__gran] - start_p[__toch] > v_temp)
+		if (gran[_xu] && fabs(start_p[__gran] - start_p[__toch]) > v_temp)
 		{
 			perem[__x] -= perem[__h1];
 			i--;

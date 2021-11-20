@@ -16,7 +16,7 @@ class Interface:
         self.master = master  # инициализируем основное окно
         self.photo = tk.PhotoImage(file='logo.png')  # загрузка иконки приложения
         master.iconphoto(False, self.photo)  # установка иконки
-        master.title('Задача Коши для ОДУ выполнил Варварин Евгений')  # заголовок
+        master.title('Задача 9. Задача Коши для ОДУ выполнил Варварин Евгений, группа 381903_2')  # заголовок
         master.configure(bg='#ececec')  # фон
         master.minsize(1530, 670)  # минимальный размер окна
 
@@ -203,7 +203,7 @@ class Interface:
         self.reference_t.insert(5.0, 'Число делений: ' + str(int(div_counter)) + '\n')
         self.reference_t.insert(6.0, 'Максимальный шаг: ' + str(max_step) + ', в точке x = ' + str(round(max_step_x, 4)) + '\n')
         self.reference_t.insert(7.0, 'Минимальный шаг: ' + str(min_step) + ', в точке x = ' + str(round(min_step_x, 4)) + '\n')
-        self.reference_t.insert(8.0, 'Максимальная глобальная ошибка: ' + str(max_error) + ', в точке x = ' + str(round(max_error_point, 4))+ '\n')
+        self.reference_t.insert(8.0, 'Максимальная глобальная погрешность: ' + str(max_error) + ', в точке x = ' + str(round(max_error_point, 4))+ '\n')
         self.reference_t.insert(9.0, 'Максимальная ОЛП: ' + str(max_olp) + ', в точке x = ' + str(
             round(max_olp_x, 4)) + '\n')
         self.reference_t.insert(10.0, 'Итоговые значения: x = ' + str(round(result_x, 4)) + ', V = ' + str(result_v) + '\n')
