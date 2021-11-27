@@ -33,6 +33,9 @@ class Interface:
 
         self.create_widgets()  # создание виджетов
 
+    def test_combobox(self):
+        print(self.task_c.get())
+
     def create_widgets(self):
 
         # начальные условия
@@ -47,7 +50,6 @@ class Interface:
         u_l = tk.Label(text='Начальные условия', bg='#ececec').grid(row=3, column=0, padx=(10, 0), sticky='we')
         u_e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.x0).grid(row=4, column=0,
                                                                                           padx=(10, 0), sticky='we')
-        print(self.task_c.get())
 
 
         # график
@@ -59,7 +61,7 @@ class Interface:
 
         self.clear_b = tk.Button(text='Очистить график', bg='#ececec', highlightbackground='#ececec', command=self.cleanPlot, width = 15)
 
-        method_b = tk.Button(text='Метод', bg='#ececec', highlightbackground='#ececec', command=self.method, width = 15).grid(
+        method_b = tk.Button(text='Метод', bg='#ececec', highlightbackground='#ececec', command=self.test_combobox, width = 15).grid(
             row=5, column=6,padx=(10,10), pady=(10, 10), sticky='we')
 
         task_b = tk.Button(text='Задача', bg='#ececec', highlightbackground='#ececec', command=self.task_window, width = 15).grid(
