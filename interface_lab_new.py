@@ -41,10 +41,14 @@ class Interface:
                                                                                                  pady=(10, 0))
         task_l = tk.Label(text='Задача', bg='#ececec').grid(row=1, column=0, padx=(10, 0), sticky='we')
         task_types = ['Тестовая', 'Основная1', 'Основная2']
-        task_c = ttk.Combobox(values=task_types).grid(row=2, column=0, sticky='news', padx=10)
+        self.task_c = ttk.Combobox(values=task_types)
+        self.task_c.current(0)
+        self.task_c.grid(row=2, column=0, sticky='news', padx=10)
         u_l = tk.Label(text='Начальные условия', bg='#ececec').grid(row=3, column=0, padx=(10, 0), sticky='we')
         u_e = tk.Entry(highlightbackground='#cbcbcb', textvariable=self.x0).grid(row=4, column=0,
                                                                                           padx=(10, 0), sticky='we')
+        print(self.task_c.get())
+
 
         # график
         self.canvas = tk.Canvas()
